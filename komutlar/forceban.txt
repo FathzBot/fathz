@@ -1,0 +1,99 @@
+const Discord = require("discord.js");
+
+module.exports.run = async (client, message, args) => {
+  if (!message.member.hasPermission("BAN_MEMBERS"))
+    return message.channel.send(
+      "Bu komutu kullanabilmek için `üyeleri yasakla` yetkisine sahip olmanız gerek."
+    );
+  if (!args[0]) {
+     var gamerwolf = new Discord.MessageEmbed()
+
+  .setColor('#ff0000')
+.setDescription(' Bu Komudu Kullanabilmek İçin ID Belirtmen Lazım')
+
+message.channel.send(gamerwolf)
+
+  }
+
+  var sebeb = args.slice(1).join(" ");
+  var id = args[0];
+  var now = new Date();
+  if (!sebeb) {
+    message.guild.fetchBans().then(bans => {
+      if (bans.has(id)) {
+     var gamerwolf = new Discord.MessageEmbed()
+
+  .setColor('#ff0000')
+.setDescription(' Bu Kullanıcı Zaten Yasaklanmış!')
+
+message.channel.send(gamerwolf)     
+      }
+      message.guild.members
+        .ban(id, {
+          reason: `${message.author.tag} - Sebeb Belirtilmemiş.`
+        })
+        .then(async member => {
+          let user;
+          if (member instanceof Discord.GuildMember) {
+            user = member.user;
+          } else if (member instanceof Discord.User) {
+            user = member;
+          } else {
+            user = await client.users.fetch(member);
+          }
+     var gamerwolf = new Discord.MessageEmbed()
+
+  .setColor('#ff0000')
+.setDescription(` **<@!${user.id}> Sunucudan Yasaklandı.**`)
+     .setImage('https://media1.tenor.com/images/66b9e27c779a1a314f0a8b31bb5609f7/tenor.gif')
+
+message.channel.send(gamerwolf)         })
+        .catch(error => {
+          console.error("Hata:", error);
+        });
+    });
+  } else {
+    message.guild.fetchBans().then(bans => {
+      if (bans.has(id)) {
+     var gamerwolf = new Discord.MessageEmbed()
+
+  .setColor('#ff0000')
+.setDescription(' Bu Kullanıcı Zaten Yasaklanmış!')
+
+message.channel.send(gamerwolf)       }
+      message.guild.members
+        .ban(id, { reason: `${message.author.tag} - ${sebeb}` })
+        .then(async member => {
+          let user;
+          if (member instanceof Discord.GuildMember) {
+            user = member.user;
+          } else if (member instanceof Discord.User) {
+            user = member;
+          } else {
+            user = await client.users.fetch(member);
+          }
+     var gamerwolf = new Discord.MessageEmbed()
+
+  .setColor('#ff0000')
+.setDescription(` **<@!${user.id}> Sunucudan Yasaklandı.**`)
+
+message.channel.send(gamerwolf) 
+                })
+        .catch(error => {
+          console.error("Hata:", error);
+        });
+    });
+  }
+};
+exports.conf = {
+  enabled: true,
+  guildOnly: false,
+  aliases: ["force-ban", "fban"],
+  permLevel: 0
+};
+
+exports.help = {
+  name: "forceban",
+  description: "ID ban",
+  usage: "forceban <id>"
+};
